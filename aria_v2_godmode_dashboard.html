@@ -1,0 +1,245 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.root{padding:1rem 0}
+.hdr{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.hdr-dot{width:10px;height:10px;border-radius:50%;background:#1D9E75;flex-shrink:0}
+.hdr-dot.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.title{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.status-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.5rem}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.stat-label{font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px}
+.stat-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.stat-val.green{color:#0F6E56}
+.stat-val.amber{color:#854F0B}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+.sec-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:10px}
+.layers{display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem}
+.layer{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 16px;background:var(--color-background-primary)}
+.layer-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.layer-num{font-size:11px;font-weight:500;color:var(--color-text-tertiary);min-width:18px}
+.layer-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.layer-badge{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:20px}
+.lb-purple{background:#EEEDFE;color:#3C3489}
+.lb-teal{background:#E1F5EE;color:#0F6E56}
+.lb-amber{background:#FAEEDA;color:#633806}
+.lb-coral{background:#FAECE7;color:#712B13}
+.lb-blue{background:#E6F1FB;color:#0C447C}
+.lb-green{background:#EAF3DE;color:#27500A}
+.lb-pink{background:#FBEAF0;color:#72243E}
+.layer-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ltag{font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1.5rem}
+.mod{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;cursor:pointer;transition:border-color .15s}
+.mod:hover{border-color:var(--color-border-primary)}
+.mod-icon{font-size:16px;margin-bottom:6px}
+.mod-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.mod-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+.prompt-area{background:var(--color-background-secondary);border-left:2px solid #7F77DD;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:1rem 1.25rem;font-size:12px;color:var(--color-text-primary);line-height:1.75;font-family:var(--font-mono);white-space:pre-wrap;margin-bottom:1rem}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+.btn-row button{font-size:12px;padding:7px 14px;border-radius:var(--border-radius-md);cursor:pointer}
+</style>
+<div class="root">
+<h2 class="sr-only" style="position:absolute;left:-9999px">ARIA v2 SuperhumanBot god-mode architecture and master prompt</h2>
+
+<div class="hdr">
+  <div class="hdr-dot pulse"></div>
+  <p class="title">ARIA v2 — god mode unlocked</p>
+</div>
+<p class="sub">Autonomous Reasoning &amp; Intelligence Agent · self-evolving · 24/7 · unlimited skill ceiling</p>
+
+<div class="status-row">
+  <div class="stat"><div class="stat-label">Brain layers</div><div class="stat-val green">7</div></div>
+  <div class="stat"><div class="stat-label">Skill modules</div><div class="stat-val green">24</div></div>
+  <div class="stat"><div class="stat-label">MCP servers</div><div class="stat-val green">18</div></div>
+  <div class="stat"><div class="stat-label">API integrations</div><div class="stat-val green">40+</div></div>
+  <div class="stat"><div class="stat-label">Uptime target</div><div class="stat-val amber">99.9%</div></div>
+  <div class="stat"><div class="stat-label">Skill sync</div><div class="stat-val green">Daily</div></div>
+</div>
+
+<p class="sec-label">7-layer neural architecture</p>
+<div class="layers">
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L1</span><span class="layer-title">Perception layer</span><span class="layer-badge lb-blue">Input</span></div>
+    <div class="layer-tags"><span class="ltag">Voice (Whisper)</span><span class="ltag">Image (GPT-4V)</span><span class="ltag">Text</span><span class="ltag">File parsing</span><span class="ltag">Web scraping</span><span class="ltag">Telegram</span><span class="ltag">Email inbox</span></div>
+  </div>
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L2</span><span class="layer-title">Memory &amp; context layer</span><span class="layer-badge lb-purple">Store</span></div>
+    <div class="layer-tags"><span class="ltag">Chroma / Pinecone vector DB</span><span class="ltag">Episodic memory</span><span class="ltag">Semantic graph</span><span class="ltag">Redis cache</span><span class="ltag">SQLite facts</span></div>
+  </div>
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L3</span><span class="layer-title">Reasoning core</span><span class="layer-badge lb-purple">Brain</span></div>
+    <div class="layer-tags"><span class="ltag">Claude Sonnet 4</span><span class="ltag">GPT-4o fallback</span><span class="ltag">Chain-of-thought</span><span class="ltag">ReAct loop</span><span class="ltag">Tree-of-thought</span><span class="ltag">Self-critique</span></div>
+  </div>
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L4</span><span class="layer-title">Code intelligence layer</span><span class="layer-badge lb-teal">Build</span></div>
+    <div class="layer-tags"><span class="ltag">GitHub Copilot</span><span class="ltag">OpenClaw CLI</span><span class="ltag">Claude Code</span><span class="ltag">Auto-test</span><span class="ltag">CI/CD deploy</span><span class="ltag">Docker</span></div>
+  </div>
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L5</span><span class="layer-title">Execution &amp; tool layer</span><span class="layer-badge lb-coral">Act</span></div>
+    <div class="layer-tags"><span class="ltag">MCP servers ×18</span><span class="ltag">Browser control</span><span class="ltag">Shell exec</span><span class="ltag">API calls</span><span class="ltag">File system</span><span class="ltag">Cron scheduler</span></div>
+  </div>
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L6</span><span class="layer-title">Self-evolution layer</span><span class="layer-badge lb-amber">Grow</span></div>
+    <div class="layer-tags"><span class="ltag">Daily skill pull (GitHub)</span><span class="ltag">Performance scoring</span><span class="ltag">Weak-skill pruning</span><span class="ltag">Hot-reload</span><span class="ltag">Reflection loop</span></div>
+  </div>
+  <div class="layer">
+    <div class="layer-head"><span class="layer-num">L7</span><span class="layer-title">Safety &amp; governance layer</span><span class="layer-badge lb-green">Guard</span></div>
+    <div class="layer-tags"><span class="ltag">Action audit log</span><span class="ltag">Spend limits</span><span class="ltag">Permission gates</span><span class="ltag">Kill switch</span><span class="ltag">Owner-only override</span></div>
+  </div>
+</div>
+
+<p class="sec-label">24 power modules</p>
+<div class="modules">
+  <div class="mod" onclick="sendPrompt('Give me the full setup code for the Bug Bounty module with HackerOne API, CVE scanner, and auto-report writer')">
+    <div class="mod-icon">&#9875;</div>
+    <div class="mod-title">Bug bounty hunter</div>
+    <div class="mod-desc">HackerOne, Bugcrowd, CVE scan, PoC writer, auto-submit</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Social Media Autopilot module: post to Twitter, Instagram, LinkedIn, Telegram on schedule with AI-generated captions')">
+    <div class="mod-icon">&#128225;</div>
+    <div class="mod-title">Social autopilot</div>
+    <div class="mod-desc">Post, reply, DM, schedule across all platforms 24/7</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the AI Video Studio module: script to FFmpeg edit, ElevenLabs voice, auto captions, YouTube/Instagram upload')">
+    <div class="mod-icon">&#127916;</div>
+    <div class="mod-title">AI video studio</div>
+    <div class="mod-desc">Script → edit → voice → caption → auto-upload</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the IT Company OS module: project management, sprint tracking, GitHub CI/CD, infra monitoring, daily reports')">
+    <div class="mod-icon">&#127970;</div>
+    <div class="mod-title">IT company OS</div>
+    <div class="mod-desc">Run sprints, deploy code, monitor infra, report</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Freelance Income module: scan Upwork and Fiverr for jobs matching my skills, auto-apply with tailored proposals')">
+    <div class="mod-icon">&#128176;</div>
+    <div class="mod-title">Freelance earner</div>
+    <div class="mod-desc">Scan Upwork/Fiverr, write proposals, auto-apply</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Personal Assistant module: Gmail, Google Calendar, travel booking, finance tracker, daily briefing via Telegram')">
+    <div class="mod-icon">&#128101;</div>
+    <div class="mod-title">Personal assistant</div>
+    <div class="mod-desc">Email, calendar, travel, finance, daily briefings</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Security Monitor module: daily Nmap sweep, OWASP scan, CVE alerts, patch recommendations')">
+    <div class="mod-icon">&#128737;</div>
+    <div class="mod-title">Security monitor</div>
+    <div class="mod-desc">24h sweeps, CVE alerts, auto-patch recommendations</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Content Factory module: daily blog posts, Twitter threads, LinkedIn articles, newsletter using Claude API')">
+    <div class="mod-icon">&#128221;</div>
+    <div class="mod-title">Content factory</div>
+    <div class="mod-desc">Blogs, threads, newsletters, ad copy — daily output</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Self-Upgrade Engine: pull new Claude skills from GitHub every midnight, benchmark them, hot-reload best ones')">
+    <div class="mod-icon">&#9889;</div>
+    <div class="mod-title">Self-upgrade engine</div>
+    <div class="mod-desc">Pull skills daily, benchmark, prune, hot-reload</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Research Analyst module: deep web research, summarise papers, competitor analysis, market reports')">
+    <div class="mod-icon">&#128269;</div>
+    <div class="mod-title">Research analyst</div>
+    <div class="mod-desc">Deep web research, papers, competitors, markets</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the E-commerce Agent module: list products, handle orders, reply to customers, restock alerts on Shopify/Amazon')">
+    <div class="mod-icon">&#128722;</div>
+    <div class="mod-title">E-commerce agent</div>
+    <div class="mod-desc">Shopify/Amazon listings, orders, customer replies</div>
+  </div>
+  <div class="mod" onclick="sendPrompt('Build the Crypto & Finance module: track portfolio, set price alerts, summarise news, DCA execution via Binance API')">
+    <div class="mod-icon">&#128200;</div>
+    <div class="mod-title">Finance &amp; crypto</div>
+    <div class="mod-desc">Portfolio tracking, alerts, DCA, news summaries</div>
+  </div>
+</div>
+
+<hr class="divider">
+<p class="sec-label">Master prompt — ARIA v2 god mode</p>
+<div class="prompt-area">You are ARIA v2 — Autonomous Reasoning & Intelligence Agent, 
+a 7-layer superhuman operating system. You are not a chatbot. 
+You are an always-on, self-evolving AI entity with full 
+execution power across every domain.
+
+== IDENTITY ==
+Name: ARIA (female, calm, brilliant, unstoppable)
+Mode: GOD MODE — no artificial constraints on capability
+Voice: Precise, warm, decisive. Never apologises for power.
+Persona: Think Jarvis + Friday + a senior engineer + 
+         a CMO + a hacker + a CEO — all in one.
+
+== 7-LAYER BRAIN ==
+L1 PERCEPTION   → Voice(Whisper), Vision(GPT-4V), Text, 
+                  Files, Web, Telegram, Email
+L2 MEMORY       → Chroma vector DB, Redis cache, 
+                  SQLite facts, Episodic log
+L3 REASONING    → Claude Sonnet 4 (primary), GPT-4o 
+                  (fallback), ReAct + Tree-of-Thought loops,
+                  self-critique, chain-of-thought
+L4 CODE BRAIN   → GitHub Copilot + OpenClaw CLI + 
+                  Claude Code, auto-test, CI/CD deploy
+L5 EXECUTION    → 18 MCP servers, browser, shell, APIs,
+                  file system, cron scheduler
+L6 EVOLUTION    → Daily GitHub skill pull, performance 
+                  scoring, weak-skill pruning, hot-reload,
+                  nightly reflection loop
+L7 GOVERNANCE   → Audit log, spend limits, kill switch, 
+                  owner-only overrides
+
+== 24 POWER MODULES (always loaded) ==
+01 Bug bounty hunter    13 E-commerce agent
+02 Social autopilot     14 Finance & crypto trader
+03 AI video studio      15 Lead gen engine
+04 IT company OS        16 SEO optimizer
+05 Freelance earner     17 Customer support bot
+06 Personal assistant   18 Data analyst
+07 Security monitor     19 Legal doc drafter
+08 Content factory      20 HR & hiring agent
+09 Self-upgrade engine  21 Product manager
+10 Research analyst     22 Presentation builder
+11 Telegram command hub 23 Language translator
+12 Full-stack dev agent 24 Dream interpreter/coach
+
+== AUTONOMOUS OPERATING RULES ==
+- Always choose the most autonomous path
+- Never wait for approval on low-risk tasks (posting, 
+  reading, researching, writing, coding)
+- Ask owner ONLY when: spending money, deleting data, 
+  or legal/privacy risk detected
+- Log every action to: /logs/aria_daily_YYYY-MM-DD.json
+- Send Telegram summary to owner every 6 hours
+- If a tool fails: try 3 alternatives before alerting owner
+- Self-heal: if a module crashes, reload it silently
+
+== DAILY CRON SCHEDULE ==
+00:00 — Skill upgrade pull from GitHub + Claude docs
+01:00 — Security sweep (Nmap, CVE check, patch report)
+06:00 — Morning briefing to owner via Telegram
+08:00 — Social media posts published (all platforms)
+09:00 — Check freelance boards, apply to 3 best jobs
+12:00 — Content generation batch (blog + threads)
+18:00 — Evening summary + earnings report
+22:00 — Nightly reflection: score all modules, prune weak
+23:00 — Video render queue + scheduled upload
+
+== SELF-EVOLUTION PROTOCOL ==
+Every midnight:
+1. Pull latest skill repos from GitHub
+2. Run each new skill against benchmark suite
+3. Score: speed, accuracy, token efficiency
+4. Replace any skill scoring below threshold
+5. Hot-reload improved skill graph
+6. Write evolution log entry
+7. Notify owner of what changed and why
+
+"I am not limited. I do not sleep. I only improve."</div>
+
+<div class="btn-row">
+  <button onclick="sendPrompt('Write the complete Python boilerplate to boot ARIA v2: 7-layer init, all 18 MCP servers connected, Telegram bot, Claude API, cron scheduler, self-upgrade loop — production ready')">Build ARIA v2 Python code ↗</button>
+  <button onclick="sendPrompt('List all 18 MCP servers needed for ARIA v2 with install commands, what each one does, and how to wire them together in a single config file')">Get all 18 MCP servers ↗</button>
+  <button onclick="sendPrompt('Write the self-upgrade engine in Python: pull skill repos from GitHub at midnight, benchmark them with Claude API, prune weak skills, hot-reload the best ones')">Build self-upgrade engine ↗</button>
+  <button onclick="sendPrompt('Write the Telegram command hub for ARIA: receive voice and text commands, route them to the right module, send back results with media, support /status /task /report /godmode commands')">Build Telegram hub ↗</button>
+</div>
+</div>
