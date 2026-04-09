@@ -2,3 +2,7 @@ claude-code-main/
 openclaw-main/
 *.zip
 plan.md
+node_modules/
+.vscode-test/
+*.vsix
+J.A.R.V.I.S-master/

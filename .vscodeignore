@@ -1,0 +1,9 @@
+node_modules/**
+dist/**/*.map
+claude-code-main/**
+openclaw-main/**
+J.A.R.V.I.S-master/**
+*.zip
+plan.md
+.git/**
+.vscode-test/**

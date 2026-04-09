@@ -1,0 +1,43 @@
+{
+  "name": "aria-v2-god-mode",
+  "displayName": "ARIA v2 Control Panel",
+  "description": "High-level VS Code extension for the ARIA v2 prompt package, dashboard, and workspace agents.",
+  "version": "0.2.0",
+  "private": true,
+  "publisher": "bharthraj1412",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:aria-v2.openDashboard",
+    "onCommand:aria-v2.openPrompt",
+    "onCommand:aria-v2.openInstructions",
+    "onCommand:aria-v2.openAgent",
+    "onCommand:aria-v2.copyPrompt",
+    "onCommand:aria-v2.openRepository"
+  ],
+  "main": "./dist/extension.js",
+  "files": [
+    "dist/**",
+    ".github/**",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -watch -p .",
+    "vscode:prepublish": "npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bharthraj1412/aria-v2-god-mode.git"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/vscode": "^1.98.0",
+    "typescript": "^5.8.0"
+  }
+}
