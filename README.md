@@ -5,6 +5,7 @@ This repository packages the ARIA v2 prompt for VS Code.
 ## Included files
 
 - `.github/prompts/aria-v2-god-mode.prompt.md` - reusable prompt
+- `.github/instructions/aria-v2.instructions.md` - file-scoped maintenance guidance
 - `.github/copilot-instructions.md` - minimal workspace-wide guidance
 - `.github/agents/aria-v2.agent.md` - custom ARIA v2 implementation agent
 
