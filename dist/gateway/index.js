@@ -164,8 +164,11 @@ async function startGateway() {
                     jsonResponse(res, 400, { error: 'message is required' });
                     return;
                 }
-                if (parsed.provider && parsed.provider !== 'openai' && parsed.provider !== 'anthropic') {
-                    jsonResponse(res, 400, { error: 'provider must be one of: openai, anthropic' });
+                if (parsed.provider &&
+                    parsed.provider !== 'openai' &&
+                    parsed.provider !== 'anthropic' &&
+                    parsed.provider !== 'openrouter') {
+                    jsonResponse(res, 400, { error: 'provider must be one of: openai, anthropic, openrouter' });
                     return;
                 }
                 const session = (0, sessions_1.getOrCreateSession)(parsed.sessionId);

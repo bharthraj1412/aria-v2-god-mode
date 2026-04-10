@@ -92,7 +92,7 @@ Data flow (high level):
 - events --raw: emit raw event JSON lines
 - events --timeout N: auto-stop stream after N seconds
 - chat <message>: send chat turn to local gateway
-- chat --provider openai|anthropic: force specific provider
+- chat --provider openai|anthropic|openrouter: force specific provider
 - chat with exec: prefix: run local shell command path
 
 ### 3.2 HTTP Endpoints
@@ -130,7 +130,7 @@ Contract source of truth:
 
 ### 3.5 Provider Behavior
 
-- Supported providers: openai, anthropic
+- Supported providers: openai, anthropic, openrouter
 - Default mode: ordered failover from config providers.order
 - Forced mode: explicit provider from chat payload
 - Missing key behavior: explicit actionable errors
@@ -332,14 +332,14 @@ Use this as the authoritative backlog for hardening work.
   - Added rotation and retention policy for JSONL session files in src/sessions/index.ts.
   - Added config fields for max size and TTL: sessions.maxSizeMb, sessions.ttlDays.
 
-### 13.5 Traffic Controls
+### 13.4 Traffic Controls
 
 10. /chat rate limiting (implemented):
   - Added token-bucket limiter in src/security/rate-limit.ts.
   - Configured via security.rateLimit (enabled, requestsPerMinute, burst).
   - Gateway returns 429 + Retry-After on limit exceed.
 
-### 13.4 Dependency Stability
+### 13.5 Dependency Stability
 
 9. Dependency guard (implemented):
   - Added scripts/check-deps.js to validate openai/zod compatibility and lockfile consistency.

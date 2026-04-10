@@ -20,12 +20,16 @@ function run() {
 
   const depOpenAI = pkg.dependencies && pkg.dependencies.openai;
   const depZod = pkg.dependencies && pkg.dependencies.zod;
+  const depWs = pkg.dependencies && pkg.dependencies.ws;
 
   if (!depOpenAI) {
     failures.push('Missing dependency: openai');
   }
   if (!depZod) {
     failures.push('Missing dependency: zod');
+  }
+  if (!depWs) {
+    failures.push('Missing dependency: ws');
   }
 
   const zodMajor = firstMajor(depZod);
@@ -42,12 +46,18 @@ function run() {
     const lock = readJson(packageLockPath);
     const lockZodVersion =
       lock.packages && lock.packages['node_modules/zod'] && lock.packages['node_modules/zod'].version;
+    const lockWsVersion =
+      lock.packages && lock.packages['node_modules/ws'] && lock.packages['node_modules/ws'].version;
 
     if (lockZodVersion) {
       const lockZodMajor = firstMajor(lockZodVersion);
       if (!Number.isNaN(lockZodMajor) && lockZodMajor !== 3) {
         failures.push(`package-lock zod major must be 3, found: ${lockZodVersion}`);
       }
+    }
+
+    if (!lockWsVersion) {
+      failures.push('package-lock must include direct node_modules/ws entry');
     }
   }
 

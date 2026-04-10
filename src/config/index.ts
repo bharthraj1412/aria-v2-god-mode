@@ -30,6 +30,10 @@ function mergeWithDefaults(parsed: unknown): RuntimeConfig {
         ...defaults.providers.anthropic,
         ...(candidate.providers?.anthropic || {}),
       },
+      openrouter: {
+        ...defaults.providers.openrouter,
+        ...(candidate.providers?.openrouter || {}),
+      },
       order: candidate.providers?.order || defaults.providers.order,
     },
     channels: {

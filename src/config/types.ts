@@ -1,4 +1,4 @@
-export type ProviderName = 'openai' | 'anthropic';
+export type ProviderName = 'openai' | 'anthropic' | 'openrouter';
 
 export interface ProviderConfig {
   model: string;
@@ -18,6 +18,7 @@ export interface RuntimeConfig {
     order: ProviderName[];
     openai: ProviderConfig;
     anthropic: ProviderConfig;
+    openrouter: ProviderConfig;
   };
   channels: {
     default: 'local-exec';

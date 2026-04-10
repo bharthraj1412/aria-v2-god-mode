@@ -10,12 +10,16 @@ export const runtimeConfigSchema = z.object({
     enforceLoopbackToken: z.boolean().optional(),
   }),
   providers: z.object({
-    order: z.array(z.enum(['openai', 'anthropic'])).min(1),
+    order: z.array(z.enum(['openai', 'anthropic', 'openrouter'])).min(1),
     openai: z.object({
       model: z.string().min(1),
       apiKeyEnv: z.string().min(1),
     }),
     anthropic: z.object({
+      model: z.string().min(1),
+      apiKeyEnv: z.string().min(1),
+    }),
+    openrouter: z.object({
       model: z.string().min(1),
       apiKeyEnv: z.string().min(1),
     }),

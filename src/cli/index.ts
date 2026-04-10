@@ -20,15 +20,29 @@ function hasEnvKey(name: string): boolean {
 }
 
 function providerEnvName(config: RuntimeConfig, provider: ProviderName): string {
-  return provider === 'openai'
-    ? config.providers.openai.apiKeyEnv
-    : config.providers.anthropic.apiKeyEnv;
+  switch (provider) {
+    case 'openai':
+      return config.providers.openai.apiKeyEnv;
+    case 'anthropic':
+      return config.providers.anthropic.apiKeyEnv;
+    case 'openrouter':
+      return config.providers.openrouter.apiKeyEnv;
+    default:
+      return config.providers.openai.apiKeyEnv;
+  }
 }
 
 function providerModel(config: RuntimeConfig, provider: ProviderName): string {
-  return provider === 'openai'
-    ? config.providers.openai.model
-    : config.providers.anthropic.model;
+  switch (provider) {
+    case 'openai':
+      return config.providers.openai.model;
+    case 'anthropic':
+      return config.providers.anthropic.model;
+    case 'openrouter':
+      return config.providers.openrouter.model;
+    default:
+      return config.providers.openai.model;
+  }
 }
 
 function gatewayAuthHeaders(config: RuntimeConfig): Record<string, string> {
@@ -59,10 +73,12 @@ function printProviderKeyHintIfMissing(body: string, config: RuntimeConfig): voi
 
   const openaiEnv = config.providers.openai.apiKeyEnv;
   const anthropicEnv = config.providers.anthropic.apiKeyEnv;
+  const openrouterEnv = config.providers.openrouter.apiKeyEnv;
   console.error('Provider API keys are missing in this shell.');
   console.error('Set keys and retry:');
   console.error(`$env:${openaiEnv} = "<your-key>"`);
   console.error(`$env:${anthropicEnv} = "<your-key>"`);
+  console.error(`$env:${openrouterEnv} = "<your-key>"`);
   console.error('Then run: openclaw chat "hello"');
 }
 
@@ -238,6 +254,7 @@ async function run(): Promise<void> {
         const providerEnv = {
           [config.providers.openai.apiKeyEnv]: hasEnvKey(config.providers.openai.apiKeyEnv),
           [config.providers.anthropic.apiKeyEnv]: hasEnvKey(config.providers.anthropic.apiKeyEnv),
+          [config.providers.openrouter.apiKeyEnv]: hasEnvKey(config.providers.openrouter.apiKeyEnv),
         };
 
         const port = await checkPortAvailability(config.gateway.host, config.gateway.port);
@@ -590,6 +607,7 @@ async function run(): Promise<void> {
         const required = [
           config.providers.openai.apiKeyEnv,
           config.providers.anthropic.apiKeyEnv,
+          config.providers.openrouter.apiKeyEnv,
         ];
         const uniqueRequired = [...new Set(required)];
 
@@ -1077,7 +1095,7 @@ async function run(): Promise<void> {
             describe: 'Channel name (default from config)',
           })
           .option('provider', {
-            choices: ['openai', 'anthropic'] as const,
+            choices: ['openai', 'anthropic', 'openrouter'] as const,
             describe: 'Force a specific provider (default: auto failover order)',
           }),
       async (argv: { message: string; session?: string; channel?: string; provider?: ProviderName }) => {

@@ -4,6 +4,7 @@ exports.generateWithProvider = generateWithProvider;
 exports.generateWithFailover = generateWithFailover;
 const anthropic_1 = require("./anthropic");
 const openai_1 = require("./openai");
+const openrouter_1 = require("./openrouter");
 const PROVIDER_RETRY_DELAYS_MS = [1000, 2000, 4000];
 const PROVIDER_RETRY_JITTER_MS = 500;
 function resolveApiKey(envName) {
@@ -20,6 +21,13 @@ function buildProvider(name, config) {
             return undefined;
         }
         return (0, openai_1.createOpenAIProvider)(config.providers.openai.model, key);
+    }
+    if (name === 'openrouter') {
+        const key = resolveApiKey(config.providers.openrouter.apiKeyEnv);
+        if (!key) {
+            return undefined;
+        }
+        return (0, openrouter_1.createOpenRouterProvider)(config.providers.openrouter.model, key);
     }
     const key = resolveApiKey(config.providers.anthropic.apiKeyEnv);
     if (!key) {

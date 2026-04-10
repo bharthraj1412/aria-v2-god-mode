@@ -14,7 +14,7 @@ Current implementation status:
 - WebSocket endpoint: /ws (connectivity + lifecycle events)
 - Session persistence: JSONL transcripts in ~/.openclaw/sessions
 - First channel: local-exec
-- First providers: OpenAI + Anthropic with ordered failover
+- First providers: OpenAI + Anthropic + OpenRouter with ordered failover
 
 Integrated capabilities (from attached skill catalog upgrades):
 
@@ -31,6 +31,7 @@ Integrated capabilities (from attached skill catalog upgrades):
 - npm
 - OpenAI API key in OPENAI_API_KEY
 - Anthropic API key in ANTHROPIC_API_KEY
+- OpenRouter API key in OPENROUTER_API_KEY
 
 ## Install
 

@@ -9,7 +9,7 @@ const YAML = require('yaml');
 
 const repoRoot = path.resolve(__dirname, '..');
 const cliPath = path.join(repoRoot, 'dist', 'cli', 'index.js');
-const testPort = 18792;
+const testPort = 18793;
 
 function createTempHome() {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'openclaw-home-rate-limit-'));
@@ -89,13 +89,7 @@ test('/chat returns 429 when rate-limit is exceeded', async () => {
 
   const gateway = spawnCli(['gateway'], env);
   try {
-    try {
-      await waitForLine(gateway.stdout, text => text.includes(`Gateway listening on http://127.0.0.1:${testPort}`));
-    } catch (e) {
-      console.error('Rate-limit gateway stdout:', gateway.stdout().slice(0, 500));
-      console.error('Rate-limit gateway stderr:', gateway.stderr().slice(0, 500));
-      throw e;
-    }
+    await waitForLine(gateway.stdout, text => text.includes(`Gateway listening on http://127.0.0.1:${testPort}`));
 
     const first = await fetch(`http://127.0.0.1:${testPort}/chat`, {
       method: 'POST',

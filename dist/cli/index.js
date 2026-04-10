@@ -54,14 +54,28 @@ function hasEnvKey(name) {
     return typeof value === 'string' && value.trim().length > 0;
 }
 function providerEnvName(config, provider) {
-    return provider === 'openai'
-        ? config.providers.openai.apiKeyEnv
-        : config.providers.anthropic.apiKeyEnv;
+    switch (provider) {
+        case 'openai':
+            return config.providers.openai.apiKeyEnv;
+        case 'anthropic':
+            return config.providers.anthropic.apiKeyEnv;
+        case 'openrouter':
+            return config.providers.openrouter.apiKeyEnv;
+        default:
+            return config.providers.openai.apiKeyEnv;
+    }
 }
 function providerModel(config, provider) {
-    return provider === 'openai'
-        ? config.providers.openai.model
-        : config.providers.anthropic.model;
+    switch (provider) {
+        case 'openai':
+            return config.providers.openai.model;
+        case 'anthropic':
+            return config.providers.anthropic.model;
+        case 'openrouter':
+            return config.providers.openrouter.model;
+        default:
+            return config.providers.openai.model;
+    }
 }
 function gatewayAuthHeaders(config) {
     const token = config.gateway.token?.trim();
@@ -87,10 +101,12 @@ function printProviderKeyHintIfMissing(body, config) {
     }
     const openaiEnv = config.providers.openai.apiKeyEnv;
     const anthropicEnv = config.providers.anthropic.apiKeyEnv;
+    const openrouterEnv = config.providers.openrouter.apiKeyEnv;
     console.error('Provider API keys are missing in this shell.');
     console.error('Set keys and retry:');
     console.error(`$env:${openaiEnv} = "<your-key>"`);
     console.error(`$env:${anthropicEnv} = "<your-key>"`);
+    console.error(`$env:${openrouterEnv} = "<your-key>"`);
     console.error('Then run: openclaw chat "hello"');
 }
 async function checkPortAvailability(host, port) {
@@ -224,6 +240,7 @@ async function run() {
         const providerEnv = {
             [config.providers.openai.apiKeyEnv]: hasEnvKey(config.providers.openai.apiKeyEnv),
             [config.providers.anthropic.apiKeyEnv]: hasEnvKey(config.providers.anthropic.apiKeyEnv),
+            [config.providers.openrouter.apiKeyEnv]: hasEnvKey(config.providers.openrouter.apiKeyEnv),
         };
         const port = await checkPortAvailability(config.gateway.host, config.gateway.port);
         let reachability = {
@@ -515,6 +532,7 @@ async function run() {
         const required = [
             config.providers.openai.apiKeyEnv,
             config.providers.anthropic.apiKeyEnv,
+            config.providers.openrouter.apiKeyEnv,
         ];
         const uniqueRequired = [...new Set(required)];
         console.log('openclaw configure');
@@ -924,7 +942,7 @@ async function run() {
         describe: 'Channel name (default from config)',
     })
         .option('provider', {
-        choices: ['openai', 'anthropic'],
+        choices: ['openai', 'anthropic', 'openrouter'],
         describe: 'Force a specific provider (default: auto failover order)',
     }), async (argv) => {
         const config = (0, config_1.loadRuntimeConfig)();

@@ -14,8 +14,8 @@ export function createAnthropicProvider(model: string, apiKey: string): Provider
         messages: [{ role: 'user', content: request.userMessage }],
       });
 
-      const textPart = message.content.find((part: { type: string }) => part.type === 'text');
-      const content = textPart?.type === 'text' ? textPart.text.trim() : '(no response)';
+      const textPart = message.content.find(part => part.type === 'text');
+      const content = textPart ? textPart.text.trim() : '(no response)';
       return { content, provider: 'anthropic', model };
     },
   };

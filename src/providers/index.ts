@@ -1,5 +1,6 @@
 import { createAnthropicProvider } from './anthropic';
 import { createOpenAIProvider } from './openai';
+import { createOpenRouterProvider } from './openrouter';
 import type { RuntimeConfig, ProviderName } from '../config/types';
 import type { Provider, ProviderRequest, ProviderResponse } from './contract';
 
@@ -21,6 +22,14 @@ function buildProvider(name: ProviderName, config: RuntimeConfig): Provider | un
       return undefined;
     }
     return createOpenAIProvider(config.providers.openai.model, key);
+  }
+
+  if (name === 'openrouter') {
+    const key = resolveApiKey(config.providers.openrouter.apiKeyEnv);
+    if (!key) {
+      return undefined;
+    }
+    return createOpenRouterProvider(config.providers.openrouter.model, key);
   }
 
   const key = resolveApiKey(config.providers.anthropic.apiKeyEnv);

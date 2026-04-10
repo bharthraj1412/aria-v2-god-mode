@@ -12,12 +12,16 @@ exports.runtimeConfigSchema = zod_1.z.object({
         enforceLoopbackToken: zod_1.z.boolean().optional(),
     }),
     providers: zod_1.z.object({
-        order: zod_1.z.array(zod_1.z.enum(['openai', 'anthropic'])).min(1),
+        order: zod_1.z.array(zod_1.z.enum(['openai', 'anthropic', 'openrouter'])).min(1),
         openai: zod_1.z.object({
             model: zod_1.z.string().min(1),
             apiKeyEnv: zod_1.z.string().min(1),
         }),
         anthropic: zod_1.z.object({
+            model: zod_1.z.string().min(1),
+            apiKeyEnv: zod_1.z.string().min(1),
+        }),
+        openrouter: zod_1.z.object({
             model: zod_1.z.string().min(1),
             apiKeyEnv: zod_1.z.string().min(1),
         }),

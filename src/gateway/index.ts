@@ -176,8 +176,13 @@ export async function startGateway(): Promise<GatewayRuntime> {
           return;
         }
 
-        if (parsed.provider && parsed.provider !== 'openai' && parsed.provider !== 'anthropic') {
-          jsonResponse(res, 400, { error: 'provider must be one of: openai, anthropic' });
+        if (
+          parsed.provider &&
+          parsed.provider !== 'openai' &&
+          parsed.provider !== 'anthropic' &&
+          parsed.provider !== 'openrouter'
+        ) {
+          jsonResponse(res, 400, { error: 'provider must be one of: openai, anthropic, openrouter' });
           return;
         }
 

@@ -10,6 +10,6 @@ export interface ProviderResponse {
 }
 
 export interface Provider {
-  name: 'openai' | 'anthropic';
+  name: 'openai' | 'anthropic' | 'openrouter';
   generate(request: ProviderRequest): Promise<ProviderResponse>;
 }

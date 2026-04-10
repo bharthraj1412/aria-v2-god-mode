@@ -58,14 +58,18 @@ function defaultRuntimeConfig() {
             enforceLoopbackToken: false,
         },
         providers: {
-            order: ['openai', 'anthropic'],
+            order: ['openai', 'anthropic', 'openrouter'],
             openai: {
                 model: 'gpt-4o-mini',
                 apiKeyEnv: 'OPENAI_API_KEY',
             },
             anthropic: {
-                model: 'claude-3-5-sonnet-latest',
+                model: 'claude-sonnet-4-6',
                 apiKeyEnv: 'ANTHROPIC_API_KEY',
+            },
+            openrouter: {
+                model: 'openai/gpt-4o-mini',
+                apiKeyEnv: 'OPENROUTER_API_KEY',
             },
         },
         channels: {
