@@ -339,9 +339,8 @@ npm run skills
 Current integrated source catalog includes skills mapped from the attached Mark-XXX action modules.
 JSON records include `tags`, `capabilities`, and `sourcePath` when available from imported SKILL frontmatter.
 
-It also includes imported orchestration/design/memory skill modules from the attached Paperclip project.
-Paperclip source entries are auto-discovered from attached SKILL.md modules under paperclip-master/paperclip-master.
-Discovery is recursive across paperclip-master/paperclip-master/skills, .claude/skills, and .agents/skills.
+It also includes imported orchestration/design/memory skill modules from the Paperclip catalog.
+Paperclip source entries are seeded by the built-in catalog and can also be auto-discovered recursively from a local paperclip-master workspace when present.
 
 ## Send a Chat Message
 

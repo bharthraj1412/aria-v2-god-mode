@@ -48,7 +48,7 @@ Primary modules:
 - src/config/index.ts + src/config/schema.ts: config parse and validation
 - src/skills/index.ts + src/skills/markxxx.ts: integrated external skill catalogs and filtering
 - src/skills/paperclip.ts: imported Paperclip skill modules mapped into runtime catalog
-  - includes runtime recursive SKILL.md auto-discovery from attached paperclip-master paths (skills, .claude/skills, .agents/skills) with static fallback entries
+  - includes runtime recursive SKILL.md auto-discovery from a local paperclip-master workspace when present, with static fallback entries
   - parses YAML frontmatter metadata (`name`, `description`, `tags`, `capabilities`) and exposes optional `sourcePath` for JSON consumers
 
 Data flow (high level):
