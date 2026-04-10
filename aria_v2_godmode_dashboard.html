@@ -1,245 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARIA v2 Command Deck</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06111d;
+      --bg-2: #0a1626;
+      --panel: rgba(12, 22, 36, 0.88);
+      --panel-2: rgba(16, 29, 46, 0.92);
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f5f8fc;
+      --muted: rgba(245, 248, 252, 0.68);
+      --accent: #4fc3f7;
+      --accent-2: #9b87f5;
+      --accent-3: #ff8a65;
+      --good: #66d19e;
+      --warn: #f4c542;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.root{padding:1rem 0}
-.hdr{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.hdr-dot{width:10px;height:10px;border-radius:50%;background:#1D9E75;flex-shrink:0}
-.hdr-dot.pulse{animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.title{font-size:22px;font-weight:500;color:var(--color-text-primary)}
-.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem}
-.status-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.5rem}
-.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
-.stat-label{font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px}
-.stat-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
-.stat-val.green{color:#0F6E56}
-.stat-val.amber{color:#854F0B}
-.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
-.sec-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:10px}
-.layers{display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem}
-.layer{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 16px;background:var(--color-background-primary)}
-.layer-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.layer-num{font-size:11px;font-weight:500;color:var(--color-text-tertiary);min-width:18px}
-.layer-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
-.layer-badge{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:20px}
-.lb-purple{background:#EEEDFE;color:#3C3489}
-.lb-teal{background:#E1F5EE;color:#0F6E56}
-.lb-amber{background:#FAEEDA;color:#633806}
-.lb-coral{background:#FAECE7;color:#712B13}
-.lb-blue{background:#E6F1FB;color:#0C447C}
-.lb-green{background:#EAF3DE;color:#27500A}
-.lb-pink{background:#FBEAF0;color:#72243E}
-.layer-tags{display:flex;flex-wrap:wrap;gap:5px}
-.ltag{font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
-.modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1.5rem}
-.mod{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;cursor:pointer;transition:border-color .15s}
-.mod:hover{border-color:var(--color-border-primary)}
-.mod-icon{font-size:16px;margin-bottom:6px}
-.mod-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
-.mod-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
-.prompt-area{background:var(--color-background-secondary);border-left:2px solid #7F77DD;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:1rem 1.25rem;font-size:12px;color:var(--color-text-primary);line-height:1.75;font-family:var(--font-mono);white-space:pre-wrap;margin-bottom:1rem}
-.btn-row{display:flex;flex-wrap:wrap;gap:8px}
-.btn-row button{font-size:12px;padding:7px 14px;border-radius:var(--border-radius-md);cursor:pointer}
-</style>
-<div class="root">
-<h2 class="sr-only" style="position:absolute;left:-9999px">ARIA v2 SuperhumanBot god-mode architecture and master prompt</h2>
+    * { box-sizing: border-box; }
 
-<div class="hdr">
-  <div class="hdr-dot pulse"></div>
-  <p class="title">ARIA v2 — god mode unlocked</p>
-</div>
-<p class="sub">Autonomous Reasoning &amp; Intelligence Agent · self-evolving · 24/7 · unlimited skill ceiling</p>
+    html { scroll-behavior: smooth; }
 
-<div class="status-row">
-  <div class="stat"><div class="stat-label">Brain layers</div><div class="stat-val green">7</div></div>
-  <div class="stat"><div class="stat-label">Skill modules</div><div class="stat-val green">24</div></div>
-  <div class="stat"><div class="stat-label">MCP servers</div><div class="stat-val green">18</div></div>
-  <div class="stat"><div class="stat-label">API integrations</div><div class="stat-val green">40+</div></div>
-  <div class="stat"><div class="stat-label">Uptime target</div><div class="stat-val amber">99.9%</div></div>
-  <div class="stat"><div class="stat-label">Skill sync</div><div class="stat-val green">Daily</div></div>
-</div>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(79, 195, 247, 0.18), transparent 26%),
+        radial-gradient(circle at top right, rgba(155, 135, 245, 0.16), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(255, 138, 101, 0.12), transparent 20%),
+        linear-gradient(180deg, var(--bg) 0%, #07101b 55%, #050a11 100%);
+      color: var(--text);
+      font-family: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
+      letter-spacing: 0.01em;
+    }
 
-<p class="sec-label">7-layer neural architecture</p>
-<div class="layers">
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L1</span><span class="layer-title">Perception layer</span><span class="layer-badge lb-blue">Input</span></div>
-    <div class="layer-tags"><span class="ltag">Voice (Whisper)</span><span class="ltag">Image (GPT-4V)</span><span class="ltag">Text</span><span class="ltag">File parsing</span><span class="ltag">Web scraping</span><span class="ltag">Telegram</span><span class="ltag">Email inbox</span></div>
-  </div>
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L2</span><span class="layer-title">Memory &amp; context layer</span><span class="layer-badge lb-purple">Store</span></div>
-    <div class="layer-tags"><span class="ltag">Chroma / Pinecone vector DB</span><span class="ltag">Episodic memory</span><span class="ltag">Semantic graph</span><span class="ltag">Redis cache</span><span class="ltag">SQLite facts</span></div>
-  </div>
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L3</span><span class="layer-title">Reasoning core</span><span class="layer-badge lb-purple">Brain</span></div>
-    <div class="layer-tags"><span class="ltag">Claude Sonnet 4</span><span class="ltag">GPT-4o fallback</span><span class="ltag">Chain-of-thought</span><span class="ltag">ReAct loop</span><span class="ltag">Tree-of-thought</span><span class="ltag">Self-critique</span></div>
-  </div>
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L4</span><span class="layer-title">Code intelligence layer</span><span class="layer-badge lb-teal">Build</span></div>
-    <div class="layer-tags"><span class="ltag">GitHub Copilot</span><span class="ltag">OpenClaw CLI</span><span class="ltag">Claude Code</span><span class="ltag">Auto-test</span><span class="ltag">CI/CD deploy</span><span class="ltag">Docker</span></div>
-  </div>
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L5</span><span class="layer-title">Execution &amp; tool layer</span><span class="layer-badge lb-coral">Act</span></div>
-    <div class="layer-tags"><span class="ltag">MCP servers ×18</span><span class="ltag">Browser control</span><span class="ltag">Shell exec</span><span class="ltag">API calls</span><span class="ltag">File system</span><span class="ltag">Cron scheduler</span></div>
-  </div>
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L6</span><span class="layer-title">Self-evolution layer</span><span class="layer-badge lb-amber">Grow</span></div>
-    <div class="layer-tags"><span class="ltag">Daily skill pull (GitHub)</span><span class="ltag">Performance scoring</span><span class="ltag">Weak-skill pruning</span><span class="ltag">Hot-reload</span><span class="ltag">Reflection loop</span></div>
-  </div>
-  <div class="layer">
-    <div class="layer-head"><span class="layer-num">L7</span><span class="layer-title">Safety &amp; governance layer</span><span class="layer-badge lb-green">Guard</span></div>
-    <div class="layer-tags"><span class="ltag">Action audit log</span><span class="ltag">Spend limits</span><span class="ltag">Permission gates</span><span class="ltag">Kill switch</span><span class="ltag">Owner-only override</span></div>
-  </div>
-</div>
+    .shell {
+      width: min(1360px, calc(100vw - 32px));
+      margin: 16px auto;
+      padding: 24px;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(8, 15, 26, 0.98), rgba(7, 13, 22, 0.94));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
 
-<p class="sec-label">24 power modules</p>
-<div class="modules">
-  <div class="mod" onclick="sendPrompt('Give me the full setup code for the Bug Bounty module with HackerOne API, CVE scanner, and auto-report writer')">
-    <div class="mod-icon">&#9875;</div>
-    <div class="mod-title">Bug bounty hunter</div>
-    <div class="mod-desc">HackerOne, Bugcrowd, CVE scan, PoC writer, auto-submit</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Social Media Autopilot module: post to Twitter, Instagram, LinkedIn, Telegram on schedule with AI-generated captions')">
-    <div class="mod-icon">&#128225;</div>
-    <div class="mod-title">Social autopilot</div>
-    <div class="mod-desc">Post, reply, DM, schedule across all platforms 24/7</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the AI Video Studio module: script to FFmpeg edit, ElevenLabs voice, auto captions, YouTube/Instagram upload')">
-    <div class="mod-icon">&#127916;</div>
-    <div class="mod-title">AI video studio</div>
-    <div class="mod-desc">Script → edit → voice → caption → auto-upload</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the IT Company OS module: project management, sprint tracking, GitHub CI/CD, infra monitoring, daily reports')">
-    <div class="mod-icon">&#127970;</div>
-    <div class="mod-title">IT company OS</div>
-    <div class="mod-desc">Run sprints, deploy code, monitor infra, report</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Freelance Income module: scan Upwork and Fiverr for jobs matching my skills, auto-apply with tailored proposals')">
-    <div class="mod-icon">&#128176;</div>
-    <div class="mod-title">Freelance earner</div>
-    <div class="mod-desc">Scan Upwork/Fiverr, write proposals, auto-apply</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Personal Assistant module: Gmail, Google Calendar, travel booking, finance tracker, daily briefing via Telegram')">
-    <div class="mod-icon">&#128101;</div>
-    <div class="mod-title">Personal assistant</div>
-    <div class="mod-desc">Email, calendar, travel, finance, daily briefings</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Security Monitor module: daily Nmap sweep, OWASP scan, CVE alerts, patch recommendations')">
-    <div class="mod-icon">&#128737;</div>
-    <div class="mod-title">Security monitor</div>
-    <div class="mod-desc">24h sweeps, CVE alerts, auto-patch recommendations</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Content Factory module: daily blog posts, Twitter threads, LinkedIn articles, newsletter using Claude API')">
-    <div class="mod-icon">&#128221;</div>
-    <div class="mod-title">Content factory</div>
-    <div class="mod-desc">Blogs, threads, newsletters, ad copy — daily output</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Self-Upgrade Engine: pull new Claude skills from GitHub every midnight, benchmark them, hot-reload best ones')">
-    <div class="mod-icon">&#9889;</div>
-    <div class="mod-title">Self-upgrade engine</div>
-    <div class="mod-desc">Pull skills daily, benchmark, prune, hot-reload</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Research Analyst module: deep web research, summarise papers, competitor analysis, market reports')">
-    <div class="mod-icon">&#128269;</div>
-    <div class="mod-title">Research analyst</div>
-    <div class="mod-desc">Deep web research, papers, competitors, markets</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the E-commerce Agent module: list products, handle orders, reply to customers, restock alerts on Shopify/Amazon')">
-    <div class="mod-icon">&#128722;</div>
-    <div class="mod-title">E-commerce agent</div>
-    <div class="mod-desc">Shopify/Amazon listings, orders, customer replies</div>
-  </div>
-  <div class="mod" onclick="sendPrompt('Build the Crypto & Finance module: track portfolio, set price alerts, summarise news, DCA execution via Binance API')">
-    <div class="mod-icon">&#128200;</div>
-    <div class="mod-title">Finance &amp; crypto</div>
-    <div class="mod-desc">Portfolio tracking, alerts, DCA, news summaries</div>
-  </div>
-</div>
+    .shell::before,
+    .shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.28;
+      pointer-events: none;
+    }
 
-<hr class="divider">
-<p class="sec-label">Master prompt — ARIA v2 god mode</p>
-<div class="prompt-area">You are ARIA v2 — Autonomous Reasoning & Intelligence Agent, 
-a 7-layer superhuman operating system. You are not a chatbot. 
-You are an always-on, self-evolving AI entity with full 
-execution power across every domain.
+    .shell::before {
+      width: 340px;
+      height: 340px;
+      top: -120px;
+      right: -120px;
+      background: radial-gradient(circle, rgba(155, 135, 245, 0.88), transparent 68%);
+    }
 
-== IDENTITY ==
-Name: ARIA (female, calm, brilliant, unstoppable)
-Mode: GOD MODE — no artificial constraints on capability
-Voice: Precise, warm, decisive. Never apologises for power.
-Persona: Think Jarvis + Friday + a senior engineer + 
-         a CMO + a hacker + a CEO — all in one.
+    .shell::after {
+      width: 280px;
+      height: 280px;
+      left: -100px;
+      bottom: -120px;
+      background: radial-gradient(circle, rgba(79, 195, 247, 0.8), transparent 68%);
+    }
 
-== 7-LAYER BRAIN ==
-L1 PERCEPTION   → Voice(Whisper), Vision(GPT-4V), Text, 
-                  Files, Web, Telegram, Email
-L2 MEMORY       → Chroma vector DB, Redis cache, 
-                  SQLite facts, Episodic log
-L3 REASONING    → Claude Sonnet 4 (primary), GPT-4o 
-                  (fallback), ReAct + Tree-of-Thought loops,
-                  self-critique, chain-of-thought
-L4 CODE BRAIN   → GitHub Copilot + OpenClaw CLI + 
-                  Claude Code, auto-test, CI/CD deploy
-L5 EXECUTION    → 18 MCP servers, browser, shell, APIs,
-                  file system, cron scheduler
-L6 EVOLUTION    → Daily GitHub skill pull, performance 
-                  scoring, weak-skill pruning, hot-reload,
-                  nightly reflection loop
-L7 GOVERNANCE   → Audit log, spend limits, kill switch, 
-                  owner-only overrides
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 24px;
+    }
 
-== 24 POWER MODULES (always loaded) ==
-01 Bug bounty hunter    13 E-commerce agent
-02 Social autopilot     14 Finance & crypto trader
-03 AI video studio      15 Lead gen engine
-04 IT company OS        16 SEO optimizer
-05 Freelance earner     17 Customer support bot
-06 Personal assistant   18 Data analyst
-07 Security monitor     19 Legal doc drafter
-08 Content factory      20 HR & hiring agent
-09 Self-upgrade engine  21 Product manager
-10 Research analyst     22 Presentation builder
-11 Telegram command hub 23 Language translator
-12 Full-stack dev agent 24 Dream interpreter/coach
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
 
-== AUTONOMOUS OPERATING RULES ==
-- Always choose the most autonomous path
-- Never wait for approval on low-risk tasks (posting, 
-  reading, researching, writing, coding)
-- Ask owner ONLY when: spending money, deleting data, 
-  or legal/privacy risk detected
-- Log every action to: /logs/aria_daily_YYYY-MM-DD.json
-- Send Telegram summary to owner every 6 hours
-- If a tool fails: try 3 alternatives before alerting owner
-- Self-heal: if a module crashes, reload it silently
+    .brand-mark {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 8px rgba(79, 195, 247, 0.12);
+      flex-shrink: 0;
+    }
 
-== DAILY CRON SCHEDULE ==
-00:00 — Skill upgrade pull from GitHub + Claude docs
-01:00 — Security sweep (Nmap, CVE check, patch report)
-06:00 — Morning briefing to owner via Telegram
-08:00 — Social media posts published (all platforms)
-09:00 — Check freelance boards, apply to 3 best jobs
-12:00 — Content generation batch (blog + threads)
-18:00 — Evening summary + earnings report
-22:00 — Nightly reflection: score all modules, prune weak
-23:00 — Video render queue + scheduled upload
+    .brand-copy { min-width: 0; }
 
-== SELF-EVOLUTION PROTOCOL ==
-Every midnight:
-1. Pull latest skill repos from GitHub
-2. Run each new skill against benchmark suite
-3. Score: speed, accuracy, token efficiency
-4. Replace any skill scoring below threshold
-5. Hot-reload improved skill graph
-6. Write evolution log entry
-7. Notify owner of what changed and why
+    .eyebrow {
+      margin: 0 0 4px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
 
-"I am not limited. I do not sleep. I only improve."</div>
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.1;
+      font-weight: 700;
+    }
 
-<div class="btn-row">
-  <button onclick="sendPrompt('Write the complete Python boilerplate to boot ARIA v2: 7-layer init, all 18 MCP servers connected, Telegram bot, Claude API, cron scheduler, self-upgrade loop — production ready')">Build ARIA v2 Python code ↗</button>
-  <button onclick="sendPrompt('List all 18 MCP servers needed for ARIA v2 with install commands, what each one does, and how to wire them together in a single config file')">Get all 18 MCP servers ↗</button>
-  <button onclick="sendPrompt('Write the self-upgrade engine in Python: pull skill repos from GitHub at midnight, benchmark them with Claude API, prune weak skills, hot-reload the best ones')">Build self-upgrade engine ↗</button>
-  <button onclick="sendPrompt('Write the Telegram command hub for ARIA: receive voice and text commands, route them to the right module, send back results with media, support /status /task /report /godmode commands')">Build Telegram hub ↗</button>
-</div>
-</div>
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-size: 12px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.85fr);
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 18px;
+    }
+
+    .hero-card,
+    .panel,
+    .card,
+    .file-card,
+    .mode-card,
+    .lane-card,
+    .engine-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.18);
+    }
+
+    .hero-card { padding: 24px; }
+
+    .hero-title {
+      margin: 10px 0 10px;
+      font-size: clamp(32px, 4.8vw, 64px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy {
+      max-width: 70ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 15px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 650;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, rgba(79, 195, 247, 0.18), rgba(155, 135, 245, 0.18));
+      border-color: rgba(79, 195, 247, 0.3);
+    }
+
+    .hero-side { display: grid; gap: 12px; }
+
+    .panel { padding: 18px; }
+
+    .panel h2,
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat .label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 750;
+      line-height: 1;
+    }
+
+    .stat .detail {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .section {
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section .heading p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 70ch;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .mode-card,
+    .lane-card,
+    .engine-card,
+    .card,
+    .file-card {
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card::after,
+    .lane-card::after,
+    .engine-card::after,
+    .card::after,
+    .file-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -30px -30px auto;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 36%, transparent), transparent 68%);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .card-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tag,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+    }
+
+    .badge {
+      background: rgba(79, 195, 247, 0.12);
+      color: #b9e8fb;
+      border: 1px solid rgba(79, 195, 247, 0.18);
+    }
+
+    .mode-card h3,
+    .lane-card h3,
+    .engine-card h3,
+    .card h3,
+    .file-card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .mode-card p,
+    .lane-card p,
+    .engine-card p,
+    .card p,
+    .file-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .bullet-list {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--text);
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .bullet-list li { color: var(--muted); }
+
+    .mode-grid .mode-card:nth-child(1) { --accent: var(--accent); }
+    .mode-grid .mode-card:nth-child(2) { --accent: var(--accent-2); }
+
+    .modes .mode-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 100%;
+    }
+
+    .score {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .registry-grid .card:nth-child(1) { --accent: var(--accent); }
+    .registry-grid .card:nth-child(2) { --accent: var(--accent-2); }
+    .registry-grid .card:nth-child(3) { --accent: var(--accent-3); }
+
+    .lanes .lane-card:nth-child(1) { --accent: #8bd3ff; }
+    .lanes .lane-card:nth-child(2) { --accent: #66d19e; }
+    .lanes .lane-card:nth-child(3) { --accent: #f4c542; }
+    .lanes .lane-card:nth-child(4) { --accent: #ff8a65; }
+    .lanes .lane-card:nth-child(5) { --accent: #9b87f5; }
+    .lanes .lane-card:nth-child(6) { --accent: #5ec6f4; }
+
+    .engines .engine-card:nth-child(1) { --accent: #4fc3f7; }
+    .engines .engine-card:nth-child(2) { --accent: #66d19e; }
+    .engines .engine-card:nth-child(3) { --accent: #f4c542; }
+    .engines .engine-card:nth-child(4) { --accent: #ff8a65; }
+
+    .files {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .file-card.ready { --accent: #66d19e; }
+    .file-card.legacy { --accent: #f4c542; }
+
+    .file-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+    }
+
+    .status.ready {
+      color: #c6f7e0;
+      border-color: rgba(102, 209, 158, 0.3);
+      background: rgba(102, 209, 158, 0.12);
+    }
+
+    .status.legacy {
+      color: #ffe0a8;
+      border-color: rgba(244, 197, 66, 0.28);
+      background: rgba(244, 197, 66, 0.12);
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding: 14px 2px 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .grid-3,
+      .grid-4,
+      .files,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .chips {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100vw - 16px, 1360px);
+        margin: 8px auto;
+        padding: 16px;
+        border-radius: 24px;
+      }
+
+      .hero-card,
+      .panel,
+      .card,
+      .file-card,
+      .mode-card,
+      .lane-card,
+      .engine-card {
+        padding: 16px;
+      }
+
+      .hero-title {
+        font-size: clamp(28px, 10vw, 42px);
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-copy">
+          <p class="eyebrow">ARIA v2 command deck</p>
+          <h1>Clawbot-style compatibility deck</h1>
+          <p>Modern ARIA by default, legacy alias when you need it.</p>
+        </div>
+      </div>
+      <nav class="chips" aria-label="Sections">
+        <a class="chip" href="#modes">Deck modes</a>
+        <a class="chip" href="#registry">Capability registry</a>
+        <a class="chip" href="#lanes">Registry lanes</a>
+        <a class="chip" href="#files">File surface</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <article class="hero-card">
+        <p class="eyebrow">Preview surface</p>
+        <h2 class="hero-title">ARIA v2 Command Deck</h2>
+        <p class="hero-copy">
+          This preview mirrors the rebuilt extension: a modern command deck for ARIA v2, plus a Clawbot-compatible
+          legacy alias mode. The vocabulary is registry-first, the surface is compact, and the build is wired for the
+          extension host rather than a standalone god-mode page.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#registry">Open capability registry</a>
+          <a class="button" href="#modes">Switch deck mode</a>
+          <a class="button" href="#files">Inspect package files</a>
+        </div>
+      </article>
+
+      <aside class="hero-side">
+        <section class="panel" aria-labelledby="status-heading">
+          <h2 id="status-heading">Deck status</h2>
+          <div class="stats">
+            <div class="stat">
+              <span class="label">Command deck</span>
+              <span class="value">2</span>
+              <p class="detail">Standard ARIA and Clawbot compatibility views.</p>
+            </div>
+            <div class="stat">
+              <span class="label">Registry lanes</span>
+              <span class="value">6</span>
+              <p class="detail">Coding, browser, cloud, research, planning, and media.</p>
+            </div>
+            <div class="stat">
+              <span class="label">Package surfaces</span>
+              <span class="value">7</span>
+              <p class="detail">Prompt, instructions, agent, registry, dashboard, extension, README.</p>
+            </div>
+            <div class="stat">
+              <span class="label">Build status</span>
+              <span class="value" style="color: var(--good);">Green</span>
+              <p class="detail">TypeScript build verified with Node16 module resolution.</p>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="section modes" id="modes">
+      <div class="heading">
+        <div>
+          <h2>Deck modes</h2>
+          <p>The extension exposes a modern ARIA deck and a Clawbot compatibility deck, so the legacy alias stays useful without becoming the default surface.</p>
+        </div>
+      </div>
+      <div class="grid-2 mode-grid">
+        <article class="mode-card">
+          <div class="card-topline">
+            <span class="tag">Modern deck</span>
+            <span class="badge">ARIA</span>
+          </div>
+          <h3>Source-backed workspace project.</h3>
+          <p>Primary view for the rebuilt extension. It surfaces the prompt stack, capability registry, and command wiring in a compact control surface.</p>
+          <div class="score">Default</div>
+          <ul class="bullet-list">
+            <li>Prompt-first workflow</li>
+            <li>Capability registry and source files</li>
+            <li>Extension-host commands</li>
+          </ul>
+        </article>
+
+        <article class="mode-card">
+          <div class="card-topline">
+            <span class="tag">Legacy alias</span>
+            <span class="badge">clawbot</span>
+          </div>
+          <h3>Compatibility layer, not a second product.</h3>
+          <p>Clawbot in this repo is treated as a legacy namespace. The deck keeps the alias available while forwarding into the modern ARIA surface.</p>
+          <div class="score">Compat</div>
+          <ul class="bullet-list">
+            <li>Legacy entry point preserved</li>
+            <li>Migration-friendly command set</li>
+            <li>Same underlying registry</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="registry">
+      <div class="heading">
+        <div>
+          <h2>Capability registry</h2>
+          <p>The registry is the extracted knowledge surface behind the dashboard: prompt, source data, and extension logic stitched into one package.</p>
+        </div>
+      </div>
+      <div class="grid-3 registry-grid">
+        <article class="card">
+          <div class="card-topline"><span class="tag">Prompt</span><span class="badge">Reusable</span></div>
+          <h3>ARIA v2 prompt stack</h3>
+          <p>Reusable cross-platform prompt template, kept in sync with the dashboard and the agent instructions.</p>
+          <ul class="bullet-list"><li>Reusable prompt body</li><li>Clear maintenance boundaries</li><li>Mode-aware language</li></ul>
+        </article>
+        <article class="card">
+          <div class="card-topline"><span class="tag">Registry</span><span class="badge">Curated</span></div>
+          <h3>Source-backed capability data</h3>
+          <p>The registry groups the extracted repository knowledge into lanes so the deck can surface it cleanly.</p>
+          <ul class="bullet-list"><li>OpenClaw skill atlas</li><li>Paperclip orchestration model</li><li>G0DM0D3 cockpit</li><li>JARVIS assistant patterns</li></ul>
+        </article>
+        <article class="card">
+          <div class="card-topline"><span class="tag">Extension</span><span class="badge">Host</span></div>
+          <h3>Command wiring</h3>
+          <p>The extension host now switches between standard and clawbot modes instead of reopening a static screen.</p>
+          <ul class="bullet-list"><li>Mode-aware commands</li><li>Capability registry action</li><li>Legacy alias preserved</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section lanes" id="lanes">
+      <div class="heading">
+        <div>
+          <h2>Registry lanes</h2>
+          <p>These are the high-signal areas the dashboard should surface first, based on the source material that was pulled into the registry.</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        <article class="lane-card"><h3>Coding Agents &amp; IDEs</h3><p>Repository-aware editing, prompt-driven generation, and agent orchestration inside the editor.</p><ul class="bullet-list"><li>Direct repo editing</li><li>Code generation</li><li>Agent orchestration</li></ul></article>
+        <article class="lane-card"><h3>Browser &amp; Automation</h3><p>Form filling, browser control, UI testing, and multi-step automation that can actually execute.</p><ul class="bullet-list"><li>Browser control</li><li>UI testing</li><li>Task sequencing</li></ul></article>
+        <article class="lane-card"><h3>DevOps &amp; Cloud</h3><p>Infrastructure, deployment, rollback, observability, and cloud management workflows.</p><ul class="bullet-list"><li>Cloud APIs</li><li>Monitoring</li><li>Deployment loops</li></ul></article>
+        <article class="lane-card"><h3>Search &amp; Research</h3><p>Feed digestion, academic search, source discovery, and evidence gathering from live inputs.</p><ul class="bullet-list"><li>Feed readers</li><li>Paper digests</li><li>Research loops</li></ul></article>
+        <article class="lane-card"><h3>Productivity &amp; Planning</h3><p>Task tracking, goals, and memory systems that keep a session from collapsing into context loss.</p><ul class="bullet-list"><li>Daily planners</li><li>Goal tracking</li><li>Persistent memory</li></ul></article>
+        <article class="lane-card"><h3>Voice &amp; Media</h3><p>Speech, transcription, OCR, audio generation, and media workflows for hands-free surfaces.</p><ul class="bullet-list"><li>Voice assistants</li><li>OCR</li><li>Audio pipelines</li></ul></article>
+      </div>
+    </section>
+
+    <section class="section engines">
+      <div class="heading">
+        <div>
+          <h2>Command engine stack</h2>
+          <p>Instead of a single monolith, the rebuilt deck is organized around a small set of command engines that explain how the surface is meant to operate.</p>
+        </div>
+      </div>
+      <div class="grid-4">
+        <article class="engine-card"><h3>Routing</h3><p>Mode-aware switching between ARIA and clawbot compatibility views.</p></article>
+        <article class="engine-card"><h3>Prompt layer</h3><p>The reusable prompt remains the core source of truth for the deck voice.</p></article>
+        <article class="engine-card"><h3>File surface</h3><p>Prompt, instructions, agent, registry, dashboard, extension, and README.</p></article>
+        <article class="engine-card"><h3>Action deck</h3><p>Open files, copy prompt text, inspect the registry, or jump to the repo.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="files">
+      <div class="heading">
+        <div>
+          <h2>File surface</h2>
+          <p>These are the package files that matter for the rebuilt project. The static preview is intentionally kept separate from the extension runtime.</p>
+        </div>
+      </div>
+      <div class="files">
+        <article class="file-card ready">
+          <div class="file-head"><h3>.github/prompts/aria-v2-god-mode.prompt.md</h3><span class="status ready">Ready</span></div>
+          <p>Reusable prompt template with the registry language and compatibility-mode note.</p>
+        </article>
+        <article class="file-card ready">
+          <div class="file-head"><h3>.github/instructions/aria-v2.instructions.md</h3><span class="status ready">Ready</span></div>
+          <p>Workspace guidance for prompt, agent, and package maintenance.</p>
+        </article>
+        <article class="file-card ready">
+          <div class="file-head"><h3>.github/agents/aria-v2.agent.md</h3><span class="status ready">Ready</span></div>
+          <p>Builder agent that keeps the dashboard, docs, and registry aligned.</p>
+        </article>
+        <article class="file-card ready">
+          <div class="file-head"><h3>src/dashboard.ts</h3><span class="status ready">Ready</span></div>
+          <p>Webview renderer with mode-aware deck copy and registry sections.</p>
+        </article>
+        <article class="file-card ready">
+          <div class="file-head"><h3>src/extension.ts</h3><span class="status ready">Ready</span></div>
+          <p>Activation and command wiring for the modern deck and clawbot alias.</p>
+        </article>
+        <article class="file-card ready">
+          <div class="file-head"><h3>src/referenceData.ts</h3><span class="status ready">Ready</span></div>
+          <p>Curated source data used by the command deck and registry lanes.</p>
+        </article>
+        <article class="file-card ready">
+          <div class="file-head"><h3>README.md</h3><span class="status ready">Ready</span></div>
+          <p>User-facing guide for the rebuilt command deck and its commands.</p>
+        </article>
+        <article class="file-card legacy">
+          <div class="file-head"><h3>aria_v2_godmode_dashboard.html</h3><span class="status legacy">Legacy preview</span></div>
+          <p>Standalone preview file retained as a reference surface. Its content now matches the command deck instead of the old god-mode page.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      The extension build is clean, the mode split is in place, and the visible preview now matches the rebuilt command deck instead of the old god-mode dashboard.
+    </footer>
+  </main>
+</body>
+</html>

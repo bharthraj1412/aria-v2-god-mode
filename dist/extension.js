@@ -40,6 +40,7 @@ const dashboard_1 = require("./dashboard");
 const projectFiles_1 = require("./projectFiles");
 const REPO_URL = 'https://github.com/bharthraj1412/aria-v2-god-mode';
 let currentPanel;
+let currentMode = 'standard';
 function getNonce() {
     const possibleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let value = '';
@@ -51,17 +52,8 @@ function getNonce() {
 async function openRepository() {
     await vscode.env.openExternal(vscode.Uri.parse(REPO_URL));
 }
-async function revealDashboard(context) {
-    const editorColumn = vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.One;
-    if (currentPanel) {
-        currentPanel.reveal(editorColumn);
-        return;
-    }
-    currentPanel = vscode.window.createWebviewPanel('ariaV2Dashboard', 'ARIA v2 Control Panel', editorColumn, {
-        enableScripts: true,
-        retainContextWhenHidden: true,
-    });
-    const fileStates = [
+function buildFileStates(context) {
+    return [
         {
             label: 'Prompt',
             path: projectFiles_1.packagePaths.prompt,
@@ -81,54 +73,130 @@ async function revealDashboard(context) {
             description: 'Workspace editing agent for repo updates and implementation tasks.',
         },
         {
+            label: 'Capability Registry',
+            path: projectFiles_1.packagePaths.referenceData,
+            ready: Boolean((0, projectFiles_1.findExistingFile)(context, projectFiles_1.packagePaths.referenceData)),
+            description: 'Curated data layer extracted from the uploaded reference repositories.',
+        },
+        {
+            label: 'Dashboard Shell',
+            path: projectFiles_1.packagePaths.dashboard,
+            ready: Boolean((0, projectFiles_1.findExistingFile)(context, projectFiles_1.packagePaths.dashboard)),
+            description: 'Webview renderer that turns the package into an actual command deck.',
+        },
+        {
+            label: 'Extension Host',
+            path: projectFiles_1.packagePaths.extension,
+            ready: Boolean((0, projectFiles_1.findExistingFile)(context, projectFiles_1.packagePaths.extension)),
+            description: 'Activation and command wiring for the ARIA command deck.',
+        },
+        {
             label: 'README',
             path: projectFiles_1.packagePaths.readme,
             ready: Boolean((0, projectFiles_1.findExistingFile)(context, projectFiles_1.packagePaths.readme)),
             description: 'Project surface and usage notes for the higher-level extension project.',
         },
     ];
+}
+function getDashboardTitle(mode) {
+    return mode === 'clawbot' ? 'ARIA v2 Clawbot Deck' : 'ARIA v2 Command Deck';
+}
+function buildDashboardActions(mode) {
+    return [
+        mode === 'clawbot'
+            ? {
+                command: 'openDashboard',
+                label: 'Return to ARIA Deck',
+                helper: 'Switch back to the modern command surface.',
+                primary: true,
+            }
+            : {
+                command: 'openClawbotDeck',
+                label: 'Open Clawbot Deck',
+                helper: 'Switch into the legacy-alias compatibility view.',
+                primary: true,
+            },
+        {
+            command: 'openPrompt',
+            label: 'Open Prompt',
+            helper: 'Jump straight to the reusable prompt file.',
+        },
+        {
+            command: 'openInstructions',
+            label: 'Open Instructions',
+            helper: 'Review the file-scoped maintenance guidance.',
+        },
+        {
+            command: 'openAgent',
+            label: 'Open Builder Agent',
+            helper: 'Load the workspace editing agent.',
+        },
+        {
+            command: 'openCapabilityRegistry',
+            label: 'Open Capability Registry',
+            helper: 'Inspect the extracted registry view from the uploaded repositories.',
+        },
+        {
+            command: 'openDashboardSource',
+            label: 'Open Dashboard Source',
+            helper: 'Inspect the HTML generator behind the deck.',
+        },
+        {
+            command: 'openExtensionSource',
+            label: 'Open Extension Source',
+            helper: 'Review the activation and command wiring.',
+        },
+        {
+            command: 'copyPrompt',
+            label: 'Copy Prompt Body',
+            helper: 'Copy the prompt text without frontmatter.',
+        },
+        {
+            command: 'openRepository',
+            label: 'Open Private Repo',
+            helper: 'Launch the private GitHub repository in your browser.',
+        },
+    ];
+}
+async function revealDashboard(context, mode = 'standard') {
+    const editorColumn = vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.One;
+    const panelTitle = getDashboardTitle(mode);
+    if (currentPanel) {
+        currentMode = mode;
+        currentPanel.title = panelTitle;
+        currentPanel.webview.html = (0, dashboard_1.buildDashboardHtml)({
+            mode,
+            nonce: getNonce(),
+            repoUrl: REPO_URL,
+            promptPreview: (0, projectFiles_1.getPromptPreview)(context, 12),
+            fileStates: buildFileStates(context),
+            actions: buildDashboardActions(mode),
+        });
+        currentPanel.reveal(editorColumn);
+        return;
+    }
+    currentMode = mode;
+    currentPanel = vscode.window.createWebviewPanel('ariaV2Dashboard', panelTitle, editorColumn, {
+        enableScripts: true,
+        retainContextWhenHidden: true,
+    });
     const promptPreview = (0, projectFiles_1.getPromptPreview)(context, 12);
     currentPanel.webview.html = (0, dashboard_1.buildDashboardHtml)({
+        mode,
         nonce: getNonce(),
         repoUrl: REPO_URL,
         promptPreview,
-        fileStates,
-        actions: [
-            {
-                command: 'openPrompt',
-                label: 'Open Prompt',
-                helper: 'Jump straight to the reusable prompt file.',
-                primary: true,
-            },
-            {
-                command: 'openInstructions',
-                label: 'Open Instructions',
-                helper: 'Review the file-scoped maintenance guidance.',
-            },
-            {
-                command: 'openAgent',
-                label: 'Open Builder Agent',
-                helper: 'Load the workspace editing agent.',
-            },
-            {
-                command: 'copyPrompt',
-                label: 'Copy Prompt Body',
-                helper: 'Copy the prompt text without frontmatter.',
-            },
-            {
-                command: 'openReadme',
-                label: 'Open README',
-                helper: 'Inspect the package surface and usage notes.',
-            },
-            {
-                command: 'openRepository',
-                label: 'Open Private Repo',
-                helper: 'Launch the private GitHub repository in your browser.',
-            },
-        ],
+        fileStates: buildFileStates(context),
+        actions: buildDashboardActions(mode),
     });
     currentPanel.webview.onDidReceiveMessage(async (message) => {
         switch (message.command) {
+            case 'openDashboard':
+                await revealDashboard(context, 'standard');
+                return;
+            case 'openClawbotDeck':
+                await revealDashboard(context, 'clawbot');
+                return;
             case 'openPrompt':
                 await (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.prompt);
                 return;
@@ -137,6 +205,16 @@ async function revealDashboard(context) {
                 return;
             case 'openAgent':
                 await (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.agent);
+                return;
+            case 'openCapabilityRegistry':
+            case 'openReferenceData':
+                await (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.referenceData);
+                return;
+            case 'openDashboardSource':
+                await (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.dashboard);
+                return;
+            case 'openExtensionSource':
+                await (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.extension);
                 return;
             case 'openReadme':
                 await (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.readme);
@@ -156,7 +234,10 @@ async function revealDashboard(context) {
     }, undefined, context.subscriptions);
 }
 function activate(context) {
-    context.subscriptions.push(vscode.commands.registerCommand('aria-v2.openDashboard', () => revealDashboard(context)), vscode.commands.registerCommand('aria-v2.openPrompt', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.prompt)), vscode.commands.registerCommand('aria-v2.openInstructions', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.instructions)), vscode.commands.registerCommand('aria-v2.openAgent', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.agent)), vscode.commands.registerCommand('aria-v2.openReadme', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.readme)), vscode.commands.registerCommand('aria-v2.copyPrompt', () => (0, projectFiles_1.copyPromptBody)(context)), vscode.commands.registerCommand('aria-v2.openRepository', openRepository));
+    context.subscriptions.push(vscode.commands.registerCommand('aria-v2.openDashboard', () => revealDashboard(context, 'standard')), vscode.commands.registerCommand('aria-v2.openClawbotDeck', () => revealDashboard(context, 'clawbot')), vscode.commands.registerCommand('aria-v2.openPrompt', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.prompt)), vscode.commands.registerCommand('aria-v2.openInstructions', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.instructions)), vscode.commands.registerCommand('aria-v2.openAgent', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.agent)), vscode.commands.registerCommand('aria-v2.openCapabilityRegistry', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.referenceData)), vscode.commands.registerCommand('aria-v2.openReferenceData', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.referenceData)), vscode.commands.registerCommand('aria-v2.openDashboardSource', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.dashboard)), vscode.commands.registerCommand('aria-v2.openExtensionSource', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.extension)), vscode.commands.registerCommand('aria-v2.openReadme', () => (0, projectFiles_1.openPackageFile)(context, projectFiles_1.packagePaths.readme)), vscode.commands.registerCommand('aria-v2.copyPrompt', () => (0, projectFiles_1.copyPromptBody)(context)), vscode.commands.registerCommand('aria-v2.openRepository', openRepository));
+    if (context.extensionMode === vscode.ExtensionMode.Development) {
+        void revealDashboard(context, 'standard');
+    }
 }
 function deactivate() {
     currentPanel?.dispose();

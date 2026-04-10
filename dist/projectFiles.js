@@ -48,6 +48,9 @@ exports.packagePaths = {
     prompt: '.github/prompts/aria-v2-god-mode.prompt.md',
     instructions: '.github/instructions/aria-v2.instructions.md',
     agent: '.github/agents/aria-v2.agent.md',
+    referenceData: 'src/referenceData.ts',
+    dashboard: 'src/dashboard.ts',
+    extension: 'src/extension.ts',
     readme: 'README.md',
 };
 function getCandidatePaths(context, relativePath) {
@@ -96,10 +99,10 @@ async function openPackageFile(context, relativePath) {
 async function copyPromptBody(context) {
     const promptText = readPackageText(context, exports.packagePaths.prompt);
     if (!promptText) {
-        vscode.window.showErrorMessage('Could not find the ARIA v2 prompt file.');
+        vscode.window.showErrorMessage('Could not find the ARIA prompt file.');
         return false;
     }
     await vscode.env.clipboard.writeText(extractPromptBody(promptText));
-    vscode.window.showInformationMessage('ARIA v2 prompt body copied to the clipboard.');
+    vscode.window.showInformationMessage('ARIA prompt body copied to the clipboard.');
     return true;
 }

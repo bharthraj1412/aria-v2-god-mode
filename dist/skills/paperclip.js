@@ -1,0 +1,246 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.loadPaperclipSkillsFromRoot = loadPaperclipSkillsFromRoot;
+exports.loadPaperclipSkills = loadPaperclipSkills;
+const fs = __importStar(require("node:fs"));
+const path = __importStar(require("node:path"));
+const yaml_1 = __importDefault(require("yaml"));
+const seedPaperclipSkills = [
+    {
+        id: 'paperclip.control-plane',
+        source: 'paperclip',
+        title: 'Paperclip Control Plane',
+        category: 'orchestration',
+        description: 'Coordinate tasks, approvals, comments, and routines through the Paperclip API workflow.',
+        entrypointHint: 'paperclip-master/skills/paperclip/SKILL.md',
+        capabilities: ['orchestration'],
+    },
+    {
+        id: 'paperclip.create-agent',
+        source: 'paperclip',
+        title: 'Paperclip Create Agent',
+        category: 'orchestration',
+        description: 'Governance-aware agent hiring flow with adapter configuration and approval handling.',
+        entrypointHint: 'paperclip-master/skills/paperclip-create-agent/SKILL.md',
+        capabilities: ['agent-management', 'orchestration'],
+    },
+    {
+        id: 'paperclip.create-plugin',
+        source: 'paperclip',
+        title: 'Paperclip Create Plugin',
+        category: 'developer',
+        description: 'Scaffold and validate Paperclip plugins against the current SDK/runtime contract.',
+        entrypointHint: 'paperclip-master/skills/paperclip-create-plugin/SKILL.md',
+        capabilities: ['plugin-development'],
+    },
+    {
+        id: 'paperclip.para-memory-files',
+        source: 'paperclip',
+        title: 'PARA Memory Files',
+        category: 'memory',
+        description: 'Use PARA-based file memory workflows for durable facts, daily notes, and tacit user patterns.',
+        entrypointHint: 'paperclip-master/skills/para-memory-files/SKILL.md',
+        capabilities: ['memory-operations'],
+    },
+    {
+        id: 'paperclip.design-guide',
+        source: 'paperclip',
+        title: 'Paperclip Design Guide',
+        category: 'design',
+        description: 'Apply Paperclip UI design system conventions for dense, consistent control-plane interfaces.',
+        entrypointHint: 'paperclip-master/.claude/skills/design-guide/SKILL.md',
+        capabilities: ['design-systems'],
+    },
+];
+function toTitleCase(value) {
+    return value
+        .split(/[-_\s]+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+        .join(' ');
+}
+function inferCategory(name, filePath) {
+    const text = `${name} ${filePath}`.toLowerCase();
+    if (text.includes('design')) {
+        return 'design';
+    }
+    if (text.includes('memory')) {
+        return 'memory';
+    }
+    if (text.includes('plugin') || text.includes('agent')) {
+        return 'developer';
+    }
+    return 'orchestration';
+}
+function parseFrontmatter(content) {
+    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+    if (!frontmatterMatch) {
+        return undefined;
+    }
+    try {
+        const parsed = yaml_1.default.parse(frontmatterMatch[1]);
+        return parsed && typeof parsed === 'object' ? parsed : undefined;
+    }
+    catch {
+        return undefined;
+    }
+}
+function normalizeString(value) {
+    if (typeof value !== 'string') {
+        return undefined;
+    }
+    const text = value.trim();
+    return text.length > 0 ? text : undefined;
+}
+function normalizeStringArray(value) {
+    if (Array.isArray(value)) {
+        const items = value
+            .map(item => normalizeString(item))
+            .filter((item) => Boolean(item));
+        return items.length > 0 ? Array.from(new Set(items)) : undefined;
+    }
+    if (typeof value === 'string') {
+        const items = value
+            .split(',')
+            .map(item => item.trim())
+            .filter(Boolean);
+        return items.length > 0 ? Array.from(new Set(items)) : undefined;
+    }
+    return undefined;
+}
+function inferCapabilities(name, category, filePath) {
+    const text = `${name} ${category} ${filePath}`.toLowerCase();
+    const caps = [];
+    if (text.includes('agent')) {
+        caps.push('agent-management');
+    }
+    if (text.includes('plugin')) {
+        caps.push('plugin-development');
+    }
+    if (text.includes('memory')) {
+        caps.push('memory-operations');
+    }
+    if (text.includes('design')) {
+        caps.push('design-systems');
+    }
+    if (caps.length === 0) {
+        caps.push('orchestration');
+    }
+    return caps;
+}
+function loadSkillFile(filePath) {
+    try {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const frontmatter = parseFrontmatter(content);
+        const name = normalizeString(frontmatter?.name) || path.basename(path.dirname(filePath));
+        const description = normalizeString(frontmatter?.description) || 'Imported Paperclip skill module.';
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        const category = inferCategory(name, filePath);
+        const tags = normalizeStringArray(frontmatter?.tags);
+        const capabilities = normalizeStringArray(frontmatter?.capabilities) || inferCapabilities(name, category, filePath);
+        const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
+        return {
+            id: `paperclip.${slug || 'skill'}`,
+            source: 'paperclip',
+            title: toTitleCase(name),
+            category,
+            description,
+            entrypointHint: relativePath,
+            tags,
+            capabilities,
+            sourcePath: relativePath,
+        };
+    }
+    catch {
+        return undefined;
+    }
+}
+function discoverSkillFiles(root) {
+    if (!fs.existsSync(root)) {
+        return [];
+    }
+    const results = [];
+    const walk = (current) => {
+        const entries = fs.readdirSync(current, { withFileTypes: true });
+        for (const entry of entries) {
+            const fullPath = path.join(current, entry.name);
+            if (entry.isDirectory()) {
+                walk(fullPath);
+                continue;
+            }
+            if (entry.isFile() && entry.name.toUpperCase() === 'SKILL.MD') {
+                results.push(fullPath);
+            }
+        }
+    };
+    walk(root);
+    return results.sort((a, b) => a.localeCompare(b));
+}
+function mergeWithSeed(discovered) {
+    const byId = new Map();
+    for (const skill of discovered) {
+        byId.set(skill.id, skill);
+    }
+    for (const skill of seedPaperclipSkills) {
+        if (!byId.has(skill.id)) {
+            byId.set(skill.id, skill);
+        }
+    }
+    return [...byId.values()].sort((a, b) => a.id.localeCompare(b.id));
+}
+function loadPaperclipSkillsFromRoot(paperclipRoot) {
+    const roots = [
+        path.join(paperclipRoot, 'skills'),
+        path.join(paperclipRoot, '.claude', 'skills'),
+        path.join(paperclipRoot, '.agents', 'skills'),
+    ];
+    const files = roots.flatMap(discoverSkillFiles);
+    const discovered = files
+        .map(loadSkillFile)
+        .filter((skill) => Boolean(skill));
+    if (discovered.length === 0) {
+        return seedPaperclipSkills;
+    }
+    return mergeWithSeed(discovered);
+}
+function loadPaperclipSkills() {
+    const workspaceRoot = process.cwd();
+    const paperclipRoot = path.join(workspaceRoot, 'paperclip-master', 'paperclip-master');
+    return loadPaperclipSkillsFromRoot(paperclipRoot);
+}

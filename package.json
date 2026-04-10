@@ -1,43 +1,52 @@
 {
-  "name": "aria-v2-god-mode",
-  "displayName": "ARIA v2 Control Panel",
-  "description": "High-level VS Code extension for the ARIA v2 prompt package, dashboard, and workspace agents.",
-  "version": "0.2.0",
+  "name": "openclaw-ultimate-agent",
+  "description": "OpenClaw-style runtime gateway with local-exec channel and OpenAI/Anthropic provider failover.",
+  "version": "0.4.0",
   "private": true,
-  "publisher": "bharthraj1412",
-  "engines": {
-    "vscode": "^1.85.0"
+  "main": "./dist/index.js",
+  "bin": {
+    "openclaw": "./dist/cli/index.js"
   },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:aria-v2.openDashboard",
-    "onCommand:aria-v2.openPrompt",
-    "onCommand:aria-v2.openInstructions",
-    "onCommand:aria-v2.openAgent",
-    "onCommand:aria-v2.copyPrompt",
-    "onCommand:aria-v2.openRepository"
-  ],
-  "main": "./dist/extension.js",
   "files": [
     "dist/**",
+    "src/**",
     ".github/**",
     "README.md",
     "package.json"
   ],
   "scripts": {
+    "check:deps": "node scripts/check-deps.js",
     "compile": "tsc -p .",
     "watch": "tsc -watch -p .",
-    "vscode:prepublish": "npm run compile"
+    "test": "npm run check:deps && npm run compile && node --test test/*.test.js",
+    "onboard": "node dist/cli/index.js onboard",
+    "doctor": "node dist/cli/index.js doctor",
+    "harden": "node dist/cli/index.js harden",
+    "rotate-token": "node dist/cli/index.js rotate-token",
+    "configure": "node dist/cli/index.js configure",
+    "gateway": "node dist/cli/index.js gateway",
+    "status": "node dist/cli/index.js status",
+    "providers": "node dist/cli/index.js providers",
+    "skills": "node dist/cli/index.js skills",
+    "events": "node dist/cli/index.js events",
+    "chat": "node dist/cli/index.js chat"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/bharthraj1412/aria-v2-god-mode.git"
   },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
+    "openai": "^5.20.2",
+    "ws": "^8.18.3",
+    "yaml": "^2.8.1",
+    "yargs": "^18.0.0",
+    "zod": "^3.25.76"
+  },
   "devDependencies": {
     "@types/node": "^22.13.0",
-    "@types/vscode": "^1.98.0",
+    "@types/yargs": "^17.0.33",
+    "@types/ws": "^8.18.1",
     "typescript": "^5.8.0"
   }
 }
