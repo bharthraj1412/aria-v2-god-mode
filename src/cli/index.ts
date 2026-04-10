@@ -40,6 +40,32 @@ function gatewayAuthHeaders(config: RuntimeConfig): Record<string, string> {
   return { 'x-openclaw-token': token };
 }
 
+function printProviderKeyHintIfMissing(body: string, config: RuntimeConfig): void {
+  const trimmed = body.trim();
+  let errorText = trimmed;
+
+  try {
+    const parsed = JSON.parse(trimmed) as { error?: unknown };
+    if (typeof parsed.error === 'string') {
+      errorText = parsed.error;
+    }
+  } catch {
+    // Keep original response body when it is not JSON.
+  }
+
+  if (!errorText.toLowerCase().includes('missing api key')) {
+    return;
+  }
+
+  const openaiEnv = config.providers.openai.apiKeyEnv;
+  const anthropicEnv = config.providers.anthropic.apiKeyEnv;
+  console.error('Provider API keys are missing in this shell.');
+  console.error('Set keys and retry:');
+  console.error(`$env:${openaiEnv} = "<your-key>"`);
+  console.error(`$env:${anthropicEnv} = "<your-key>"`);
+  console.error('Then run: openclaw chat "hello"');
+}
+
 async function checkPortAvailability(host: string, port: number): Promise<{ available: boolean; reason?: string }> {
   return new Promise(resolve => {
     const server = net.createServer();
@@ -1084,6 +1110,7 @@ async function run(): Promise<void> {
         if (!response.ok) {
           console.error(`Chat failed: HTTP ${response.status}`);
           console.error(body);
+          printProviderKeyHintIfMissing(body, config);
           process.exitCode = 1;
           return;
         }
