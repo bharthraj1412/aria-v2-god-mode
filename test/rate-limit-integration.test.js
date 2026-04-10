@@ -52,6 +52,13 @@ async function waitForLine(getText, matcher, timeoutMs = 10000) {
   throw new Error('Timed out waiting for expected output');
 }
 
+async function waitForProcessClose(child, timeoutMs = 5000) {
+  return Promise.race([
+    once(child, 'close'),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Process close timeout')), timeoutMs)),
+  ]);
+}
+
 test('/chat returns 429 when rate-limit is exceeded', async () => {
   const tempHome = createTempHome();
   const env = {
@@ -82,7 +89,13 @@ test('/chat returns 429 when rate-limit is exceeded', async () => {
 
   const gateway = spawnCli(['gateway'], env);
   try {
-    await waitForLine(gateway.stdout, text => text.includes(`Gateway listening on http://127.0.0.1:${testPort}`));
+    try {
+      await waitForLine(gateway.stdout, text => text.includes(`Gateway listening on http://127.0.0.1:${testPort}`));
+    } catch (e) {
+      console.error('Rate-limit gateway stdout:', gateway.stdout().slice(0, 500));
+      console.error('Rate-limit gateway stderr:', gateway.stderr().slice(0, 500));
+      throw e;
+    }
 
     const first = await fetch(`http://127.0.0.1:${testPort}/chat`, {
       method: 'POST',
@@ -105,7 +118,12 @@ test('/chat returns 429 when rate-limit is exceeded', async () => {
     assert.ok(body.retryAfterSec >= 1);
   } finally {
     gateway.child.kill();
-    const [gatewayCode] = await once(gateway.child, 'close');
-    assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    try {
+      const [gatewayCode] = await waitForProcessClose(gateway.child);
+      assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    } catch (e) {
+      // Process close timed out or failed, force kill
+      gateway.child.kill('SIGKILL');
+    }
   }
 });

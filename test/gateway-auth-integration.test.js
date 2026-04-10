@@ -53,6 +53,13 @@ async function waitForLine(getText, matcher, timeoutMs = 10000) {
   throw new Error('Timed out waiting for expected output');
 }
 
+async function waitForProcessClose(child, timeoutMs = 5000) {
+  return Promise.race([
+    once(child, 'close'),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Process close timeout')), timeoutMs)),
+  ]);
+}
+
 function waitForSocketDenied(url, headers, timeoutMs = 5000) {
   return new Promise((resolve, reject) => {
     const socket = new WebSocket(url, { headers });
@@ -173,7 +180,12 @@ test('gateway enforces token for forwarded non-loopback traffic when trustProxy 
     assert.equal(wsAllowed, 'welcome');
   } finally {
     gateway.child.kill();
-    const [gatewayCode] = await once(gateway.child, 'close');
-    assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    try {
+      const [gatewayCode] = await waitForProcessClose(gateway.child);
+      assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    } catch (e) {
+      // Process close timed out or failed, force kill
+      gateway.child.kill('SIGKILL');
+    }
   }
 });

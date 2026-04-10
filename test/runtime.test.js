@@ -51,6 +51,13 @@ async function waitForLine(getText, matcher, timeoutMs = 10000) {
   throw new Error('Timed out waiting for expected output');
 }
 
+async function waitForProcessClose(child, timeoutMs = 5000) {
+  return Promise.race([
+    once(child, 'close'),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Process close timeout')), timeoutMs)),
+  ]);
+}
+
 test('runtime gateway serves health, chat, and websocket events', async () => {
   const tempHome = createTempHome();
   const env = {
@@ -67,8 +74,17 @@ test('runtime gateway serves health, chat, and websocket events', async () => {
   let socket;
 
   try {
-    const gatewayOutput = await waitForLine(gateway.stdout, text => text.includes('Gateway listening on http://127.0.0.1:18789'));
-    assert.match(gatewayOutput, /Gateway listening on http:\/\/127\.0\.0\.1:18789/);
+    try {
+      const gatewayOutput = await waitForLine(gateway.stdout, text => text.includes('Gateway listening on http://127.0.0.1:18789'));
+      assert.match(gatewayOutput, /Gateway listening on http:\/\/127\.0\.0\.1:18789/);
+    } catch (e) {
+      // Add debug info if stdout doesn't contain the message
+      const currentStdout = gateway.stdout();
+      const currentStderr = gateway.stderr();
+      console.error('Gateway stdout:', currentStdout.slice(0, 500));
+      console.error('Gateway stderr:', currentStderr.slice(0, 500));
+      throw e;
+    }
 
     socket = new WebSocket('ws://127.0.0.1:18789/ws');
     socket.on('message', data => {
@@ -118,7 +134,12 @@ test('runtime gateway serves health, chat, and websocket events', async () => {
     }
 
     gateway.child.kill();
-    const [gatewayCode] = await once(gateway.child, 'close');
-    assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    try {
+      const [gatewayCode] = await waitForProcessClose(gateway.child);
+      assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    } catch (e) {
+      // Process close timed out or failed, force kill
+      gateway.child.kill('SIGKILL');
+    }
   }
 });

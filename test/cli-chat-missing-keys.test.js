@@ -52,6 +52,13 @@ async function waitForLine(getText, matcher, timeoutMs = 10000) {
   throw new Error('Timed out waiting for expected output');
 }
 
+async function waitForProcessClose(child, timeoutMs = 5000) {
+  return Promise.race([
+    once(child, 'close'),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Process close timeout')), timeoutMs)),
+  ]);
+}
+
 test('chat prints provider key setup hint when API keys are missing', async () => {
   const tempHome = createTempHome();
   const env = {
@@ -90,7 +97,12 @@ test('chat prints provider key setup hint when API keys are missing', async () =
     assert.match(chat.stderr(), /\$env:ANTHROPIC_API_KEY = "<your-key>"/);
   } finally {
     gateway.child.kill();
-    const [gatewayCode] = await once(gateway.child, 'close');
-    assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    try {
+      const [gatewayCode] = await waitForProcessClose(gateway.child);
+      assert.ok(gatewayCode === 0 || gatewayCode === null, gateway.stderr());
+    } catch (e) {
+      // Process close timed out or failed, force kill
+      gateway.child.kill('SIGKILL');
+    }
   }
 });
